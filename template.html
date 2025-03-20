@@ -1,0 +1,75 @@
+<html>
+    <head>
+        <title>Estrutura de um template HTML</title>
+
+        <style>
+            body {
+                margin: auto;
+                padding: 0;
+                font-family: Arial, sans-serif;
+
+                height: 100vh;
+
+                max-width: 1200px;
+
+                font-size: 32px;
+                display: flex;
+                flex-direction: column;
+            }
+
+            header {
+                max-height: 160px;
+            }
+
+            aside {
+                max-width: 360px;
+            }
+
+            .container {
+                display: flex;
+                justify-content: center;
+                align-items: center;
+
+                margin: 16px;
+                padding: 16px;
+
+                border: 2px solid #000;
+                border-radius: 24px;
+
+                text-align: center;
+            }
+
+            .wrapper {
+                display: grid;
+                grid-template-columns: 1fr 3fr;
+                gap: 16px;
+
+                flex: 1;
+                width: 100%;
+            }
+
+            @media (max-width: 768px) {
+                .wrapper {
+                    grid-template-columns: 1fr;
+                }
+
+                aside {
+                    max-width: 100%;
+                }
+            }
+        </style>
+    </head>
+    <body>
+        <header class="container">
+            header
+        </header>
+        <div class="wrapper">
+            <aside class="container">
+                aside
+            </aside>
+            <main class="container">
+                main
+            </main>
+        </div>
+    </body>
+</html>
