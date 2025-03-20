@@ -1,0 +1,62 @@
+<html>
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        
+        <title>Tabela</title>
+
+        <link rel="stylesheet" href="./style.css">
+    </head>
+    <body>
+        <main class="container">
+            <table>
+                <caption>
+                  Front-end web developer course 2021
+                </caption>
+                <thead>
+                  <!-- Adicionar input para filtrar os resultados da tabela -->
+                  <tr>
+                    <th scope="col">Person</th>
+                    <th scope="col">Most interest in</th>
+                    <th scope="col">Age</th>
+                  </tr>
+                </thead>
+                <tbody id="table-people">
+                </tbody>
+                <tfoot>
+                  <tr>
+                    <th scope="row" colspan="2">Average age</th>
+                    <td id="average-age">33</td>
+                  </tr>
+                </tfoot>
+                <!-- Botão para cadastrar um novo registro na tabela -->
+            </table>
+        </main>
+    </body>
+
+    <script type="module">
+        import { people } from './table.js';
+
+        people().then(data => {
+            const tbody = document.getElementById('table-people');
+            const tfoot = document.getElementById('average-age');            
+
+            let ages = 0
+
+            data.forEach(person => {
+                const tr = document.createElement('tr');
+                tr.innerHTML = `
+                    <th scope="row">${person.name}</th>
+                    <td>${person.interest}</td>
+                    <td>${person.age}</td>
+                `;
+                tbody.appendChild(tr);
+
+                ages += person.age;
+            });
+
+            const average = ages / data.length;
+            tfoot.textContent = average.toFixed(0);
+        });
+    </script>
+</html>
