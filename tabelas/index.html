@@ -2,61 +2,136 @@
     <head>
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        
         <title>Tabela</title>
-
         <link rel="stylesheet" href="./style.css">
     </head>
     <body>
         <main class="container">
             <table>
-                <caption>
-                  Front-end web developer course 2021
-                </caption>
+                <caption>Front-end web developer course 2021</caption>
                 <thead>
-                  <!-- Adicionar input para filtrar os resultados da tabela -->
-                  <tr>
-                    <th scope="col">Person</th>
-                    <th scope="col">Most interest in</th>
-                    <th scope="col">Age</th>
-                  </tr>
+                    <tr>
+                        <th colspan="3">
+                            <input 
+                              type="text" 
+                              id="searchInput" 
+                              placeholder="Search by name..."
+                              oninput="handleSearch()"
+                            >
+                        </th>
+                    </tr>
+                    <tr>
+                        <th scope="col">Person</th>
+                        <th scope="col">Most interest in</th>
+                        <th scope="col">Age</th>
+                    </tr>
                 </thead>
-                <tbody id="table-people">
-                </tbody>
+                <tbody id="table-people"></tbody>
                 <tfoot>
-                  <tr>
-                    <th scope="row" colspan="2">Average age</th>
-                    <td id="average-age">33</td>
-                  </tr>
+                    <tr>
+                        <th scope="row" colspan="2">Average age</th>
+                        <td id="average-age">33</td>
+                    </tr>
+                    <tr>
+                        <td colspan="3" class="add-person">
+                            <button id="add-button" onclick="showModal()">Add New Record</button>
+                        </td>
+                    </tr>
                 </tfoot>
-                <!-- Botão para cadastrar um novo registro na tabela -->
             </table>
         </main>
-    </body>
+        
+        <div id="add-modal" class="modal">
+            <div class="modal-content">
+                <form id="add-form" onsubmit="return handleFormSubmit(event)">
+                    <h3>Add New Person</h3>
+                    <div class="form-group">
+                        <label for="name">Name:</label>
+                        <input type="text" id="name" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="interest">Interest:</label>
+                        <input type="text" id="interest" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="age">Age:</label>
+                        <input type="number" id="age" required min="1">
+                    </div>
+                    <button type="submit">Add Person</button>
+                </form>
+            </div>
+        </div>
 
-    <script type="module">
-        import { people } from './table.js';
+        <script type="module">
+            import { people } from './table.js';
 
-        people().then(data => {
-            const tbody = document.getElementById('table-people');
-            const tfoot = document.getElementById('average-age');            
+            window.originalData = [];
+            window.modal = document.getElementById('add-modal');
+            window.addForm = document.getElementById('add-form');
 
-            let ages = 0
-
-            data.forEach(person => {
-                const tr = document.createElement('tr');
-                tr.innerHTML = `
-                    <th scope="row">${person.name}</th>
-                    <td>${person.interest}</td>
-                    <td>${person.age}</td>
-                `;
-                tbody.appendChild(tr);
-
-                ages += person.age;
+            people().then(data => {
+                window.originalData = data;
+                renderTable(data);
             });
 
-            const average = ages / data.length;
-            tfoot.textContent = average.toFixed(0);
-        });
-    </script>
+            window.handleSearch = function() {
+                const searchTerm = document.getElementById('searchInput').value.toLowerCase();
+                const filteredData = window.originalData.filter(person => 
+                    person.name.toLowerCase().includes(searchTerm)
+                );
+                renderTable(filteredData);
+            };
+
+            window.showModal = function() {
+                window.modal.style.display = 'flex';
+            };
+
+            window.handleFormSubmit = function(e) {
+                const newRecord = {
+                    name: document.getElementById('name').value.trim(),
+                    interest: document.getElementById('interest').value.trim(),
+                    age: parseInt(document.getElementById('age').value)
+                };
+
+                if (isValidRecord(newRecord)) {
+                    window.originalData.push(newRecord);
+                    renderTable(window.originalData);
+                    window.addForm.reset();
+                    window.modal.style.display = 'none';
+                }
+                return false; 
+            };
+
+            window.isValidRecord = function(record) {
+                return (
+                    record.name.length > 0 &&
+                    record.interest.length > 0 &&
+                    !isNaN(record.age) &&
+                    record.age > 0
+                );
+            };
+
+            function renderTable(data) {
+                const tbody = document.getElementById('table-people');
+                const tfoot = document.getElementById('average-age');
+                
+                tbody.innerHTML = '';
+                let totalAge = 0;
+
+                data.forEach(person => {
+                    const tr = document.createElement('tr');
+                    tr.innerHTML = `
+                        <th scope="row">${person.name}</th>
+                        <td>${person.interest}</td>
+                        <td>${person.age}</td>
+                    `;
+                    tbody.appendChild(tr);
+                    totalAge += person.age;
+                });
+
+                const average = totalAge / data.length;
+                tfoot.textContent = average.toFixed(0);
+            }
+        </script>
+    </body>
 </html>
