@@ -16,7 +16,7 @@
                               type="text" 
                               id="searchInput" 
                               placeholder="Search by name..."
-                              oninput="handleSearch()"
+                              oninput="handleSearch"
                             >
                         </th>
                     </tr>
@@ -34,7 +34,7 @@
                     </tr>
                     <tr>
                         <td colspan="3" class="add-person">
-                            <button id="add-button" onclick="showModal()">Add New Record</button>
+                            <button id="add-button" onclick="showModal">Add New Record</button>
                         </td>
                     </tr>
                 </tfoot>
@@ -43,7 +43,7 @@
         
         <div id="add-modal" class="modal">
             <div class="modal-content">
-                <form id="add-form" onsubmit="return handleFormSubmit(event)">
+                <form id="add-form" onsubmit="handleFormSubmit">
                     <h3>Add New Person</h3>
                     <div class="form-group">
                         <label for="name">Name:</label>
@@ -87,6 +87,8 @@
             };
 
             window.handleFormSubmit = function(e) {
+                e.preventDefault()
+
                 const newRecord = {
                     name: document.getElementById('name').value.trim(),
                     interest: document.getElementById('interest').value.trim(),
@@ -99,7 +101,6 @@
                     window.addForm.reset();
                     window.modal.style.display = 'none';
                 }
-                return false; 
             };
 
             window.isValidRecord = function(record) {
@@ -135,3 +136,6 @@
         </script>
     </body>
 </html>
+
+<!-- adicionar registros ao data.json, exibir tabela em paginas de 5 registros por vez, exibir embaixo da tabela a paginação -->
+<!-- adicionar ordenação das colunas -->

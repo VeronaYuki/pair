@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Jogo da velha</title>
+        <link rel="stylesheet" href="style.css">
+    </head>
+    <body>
+        <div class="container">
+            <h1>JOGO DA VELHA</h1>
+            <div id="setup">
+                <input type="number" id="grid-size" min="3" max="9" value="3">
+                <button id="new-game">Novo Jogo</button>
+                <button id="help">Ajuda</button>
+            </div>
+            <div id="game" class="hidden">
+                <div id="status"></div>
+                <div id="board"></div>
+                <div id="controls">
+                    <button id="restart">Recomeçar</button>
+                </div>
+            </div>
+        </div>
+        <div id="help-modal" class="hidden">
+            <div id="modal-content">
+                <span id="close">&times;</span>
+                <h2>🕹️ Como jogar:</h2>
+                <div id="help-content">
+                    <ul>
+                        <li>Escolha um tamanho de tabuleiro (entre 3 e 9) e clique em 'Novo Jogo'</li>
+                        <li>Clique em um espaço para posicionar seu símbolo (X/O)</li>
+                        <li>Vence quem completar uma linha apenas com seu símbolo</li>
+                        <li>Linhas podem ser horizontais, verticais ou diagonais</li>
+                        <li>Clique em 'Recomeçar' para voltar ao início a qualquer momento!</li>
+                        <h3><strong>Boa sorte!</strong></h3>
+                    </ul>
+                </div>
+            </div>
+        </div>
+        <script src="script.js"></script>
+    </body>
+</html>

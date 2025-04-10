@@ -1,0 +1,114 @@
+:root {
+    --cell-size: 70px;
+}
+
+body {
+    font-family: 'Courier New', monospace;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    background-color: #1a1a1a;
+    color: #00ff00fb;
+}
+
+input#grid-size {
+    background: #000;
+    color: #00ff00;
+    border: 1px solid #00ff00;
+    padding: 5px;
+    width: 60px;
+}
+
+button {
+    background: #000;
+    color: #00ff00;
+    border: 1px solid #00ff00;
+    padding: 5px 10px;
+    cursor: pointer;
+    transition: all 0.3s;
+}
+
+button:hover {
+    background: #00ff00;
+    color: #000;
+}
+
+.hidden {
+    display: none !important;
+}
+    
+.cell {
+    width: var(--cell-size);
+    height: var(--cell-size);
+    background: #000;
+    border: 1px solid #00ff00;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 24px;
+    cursor: pointer;
+}
+
+#setup {
+    display: flex;
+    gap: 16px;
+}
+
+#board {
+    display: grid;
+    gap: 5px;
+    margin: 20px;
+    background: #000;
+}
+
+#status {
+    margin: 20px;
+    font-size: 1.2em;
+}
+
+#controls {
+    display: flex;
+    margin-left: 82px;
+    margin-top: 20px;
+}
+
+#help-modal {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.8);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+#modal-content {
+    background: #000;
+    border: 2px solid #00ff00;
+    padding: 20px;
+    max-width: 500px;
+    position: relative;
+    color: #00ff00;
+}
+
+#close {
+    position: absolute;
+    top: 10px;
+    right: 20px;
+    font-size: 28px;
+    cursor: pointer;
+}
+
+#close:hover {
+    color: #ff0000;
+}
+
+#help-content ul {
+    padding-left: 20px;
+}
+
+#help-content li {
+    margin: 10px 0;
+}
