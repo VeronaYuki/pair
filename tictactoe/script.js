@@ -2,7 +2,6 @@ class Game {
     constructor() {
         this.board = document.getElementById('board');
         this.status = document.getElementById('status');
-        this.gridSizeInput = document.getElementById('grid-size');
         this.gameContainer = document.getElementById('game');
         this.modal = document.getElementById('help-modal');
         this.closeBtn = document.querySelector('#close');
@@ -11,10 +10,18 @@ class Game {
         this.gameState = [];
         this.gameActive = false;
         this.size = 3;
-
-        document.getElementById('new-game').addEventListener('click', () => this.initializeGame());
+        this.aiMode = false;
+        
+        document.getElementById('new-game').addEventListener('click', () => {
+            this.aiMode = false
+            this.initializeGame();
+        });
         document.getElementById('restart').addEventListener('click', () => this.restartGame());
         document.getElementById('help').addEventListener('click', () => this.showHelp());
+        document.getElementById('toggle-ai').addEventListener('click', () => {
+            this.aiMode = true
+            this.initializeGame();
+        });
         this.closeBtn.addEventListener('click', () => this.closeHelp());
             window.addEventListener('click', (e) => {
             if (e.target === this.modal) 
@@ -27,11 +34,6 @@ class Game {
     }
 
     initializeGame() {
-        this.size = parseInt(this.gridSizeInput.value);
-        if (this.size < 3 || this.size > 9) {
-            alert('O tamanho do tabuleiro deve estar entre 3 e 9!');
-            return ;
-        }
         this.createBoard();
         this.gameActive = true;
         this.gameContainer.classList.remove('hidden');
@@ -68,19 +70,101 @@ class Game {
         }
 
         if (this.checkDraw()) {
-            this.status.textContent = "Empate! ):";
+            this.status.textContent = "Deu velha! ):";
             this.gameActive = false;
             return;
         }
 
         this.currentPlayer = this.currentPlayer === 'X' ? 'O' : 'X';
         this.updateStatus();
+
+        if (this.aiMode && this.gameActive) {
+            setTimeout(() => this.aiMove(), 500); 
+        }
+    }
+
+    aiMove() {
+        const bestMove = this.findBestMove();
+        if (bestMove === -1) return;
+
+        this.gameState[bestMove] = 'O';
+        this.board.children[bestMove].textContent = 'O';
+
+        if (this.checkWin()) {
+            this.status.textContent = "AI venceu!";
+            this.gameActive = false;
+            return;
+        }
+
+        if (this.checkDraw()) {
+            this.status.textContent = "Deu velha! ):";
+            this.gameActive = false;
+            return;
+        }
+
+        this.currentPlayer = 'X';
+        this.updateStatus();
     }
     
+    findBestMove() {
+        let bestScore = -2;
+        let bestMove = -1;
+
+        for (let i = 0; i < this.size * this.size; i++) {
+            if (this.gameState[i] === '') {
+                this.gameState[i] = 'O';
+                const score = this.minimax(false);
+                this.gameState[i] = '';
+                
+                if (score > bestScore) {
+                    bestScore = score;
+                    bestMove = i;
+                }
+            }
+        }
+        return bestMove;
+    }
+
+    minimax(isMaximizing) {
+        if (this.isWinner('O')) return 1;
+        if (this.isWinner('X')) return -1;
+        if (this.checkDraw()) return 0;
+
+        if (isMaximizing) {
+            let bestScore = -2;
+            for (let i = 0; i < this.size * this.size; i++) {
+                if (this.gameState[i] === '') {
+                    this.gameState[i] = 'O';
+                    const score = this.minimax(false);
+                    this.gameState[i] = '';
+                    bestScore = Math.max(score, bestScore);
+                }
+            }
+            return bestScore;
+        } else {
+            let bestScore = 2;
+            for (let i = 0; i < this.size * this.size; i++) {
+                if (this.gameState[i] === '') {
+                    this.gameState[i] = 'X';
+                    const score = this.minimax(true);
+                    this.gameState[i] = '';
+                    bestScore = Math.min(score, bestScore);
+                }
+            }
+            return bestScore;
+        }
+    }
+
     checkWin() {
         const lines = this.getLines();
         return lines.some(line => 
             line.every(index => this.gameState[index] === this.currentPlayer)
+        );
+    }
+
+    isWinner(player) {
+        return this.getLines().some(line => 
+            line.every(index => this.gameState[index] === player)
         );
     }
     
@@ -122,5 +206,5 @@ class Game {
         this.modal.classList.add('hidden');
     }
 }
-    
+ 
 new Game();
